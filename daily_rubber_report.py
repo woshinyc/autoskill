@@ -8,9 +8,9 @@ from send_email import send_html_email
 
 
 RSS_SOURCES = [
+    ("Rubber News", "https://www.rubbernews.com/rss/"),
     ("Tyre Trends", "https://tyre-trends.com/feed/"),
-    ("European Rubber Journal", "https://www.european-rubber-journal.com/feed/"),
-    ("QinRex 橡胶信息", "http://www.qinrex.cn/rss/news.xml"),
+    ("Tire Business", "https://www.tirebusiness.com/rss/"),
 ]
 
 
@@ -60,12 +60,9 @@ def build_html(all_news: dict) -> str:
     <div style="font-size:12px;color:#b86c14;letter-spacing:2px;font-weight:bold;">RUBBER &amp; BATCHING DAILY · {today}</div>
     <h1 style="margin:8px 0 6px 0;font-size:22px;color:#14283d;">密炼机与自动化配料日报 · {total} 条行业动态</h1>
   </div>
-  <div style="background:#fff8e1;border-left:4px solid #ffc107;padding:10px 14px;margin-bottom:18px;font-size:12px;color:#555;">
-    本日报由 Gitee Go 云端自动抓取 RSS 生成，后续可扩展八大监测面分类与 AI 摘要。
-  </div>
   {''.join(cards)}
   <div style="margin-top:24px;padding-top:14px;border-top:1px solid #e0e0e0;font-size:11px;color:#999;">
-    来源：Tyre Trends / European Rubber Journal / QinRex · {today} · Gitee Go 云端自动生成
+    来源：Rubber News / Tyre Trends / Tire Business · {today} · GitHub Actions 云端自动生成
   </div>
 </div></body></html>"""
 
@@ -85,8 +82,8 @@ def main():
 
     total = sum(len(v) for v in all_news.values())
     if total == 0:
-        print("[error] no news fetched", file=sys.stderr)
-        sys.exit(1)
+        print("[warn] no news fetched, sending empty report")
+        all_news = {"暂无更新": []}
 
     html = build_html(all_news)
     send_html_email(
