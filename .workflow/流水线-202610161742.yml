@@ -1,0 +1,35 @@
+version: "1.0"
+name: daily-report
+displayName: 每日日报邮件
+stages:
+- name: send
+  displayName: 发送日报邮件
+  strategy: naturally
+  trigger: auto
+  steps:
+  - step: build@python
+    name: ""
+    displayName: 发送日报邮件
+    pythonVersion: "3.9"
+    commands:
+    - python3 daily_global_news.py
+    - python3 daily_rubber_report.py
+    notify: []
+    strategy:
+      retry: "0"
+      resource:
+        cpu: "2"
+        memory: "4"
+triggers:
+  trigger: cron
+  cron: "0 8 * * *"
+notify: []
+strategy:
+  blocking: true
+variables:
+  QQ_AUTH_CODE:
+    type: TEXT
+    default: gaxpmnaghhsmbhji
+  RECIPIENTS:
+    type: TEXT
+    default: "290704926@qq.com,vivien.zhang@adson-tech.com"
