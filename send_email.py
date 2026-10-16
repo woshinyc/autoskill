@@ -4,6 +4,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
+from email.utils import formataddr
 
 
 def send_html_email(subject: str, html_body: str, from_name: str = "豆包行业日报"):
@@ -18,8 +19,8 @@ def send_html_email(subject: str, html_body: str, from_name: str = "豆包行业
         raise RuntimeError("环境变量 QQ_AUTH_CODE 未设置")
 
     msg = MIMEMultipart()
-    msg["From"] = Header(f"{from_name} <{sender}>", "utf-8")
-    msg["To"] = ",".join(recipients)
+    msg["From"] = formataddr((str(Header(from_name, "utf-8")), sender))
+    msg["To"] = ", ".join(recipients)
     msg["Subject"] = Header(subject, "utf-8")
     msg.attach(MIMEText(html_body, "html", "utf-8"))
 
